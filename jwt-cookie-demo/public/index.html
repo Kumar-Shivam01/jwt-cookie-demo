@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>JWT + Cookie Demo</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 480px; margin: 60px auto; color: #222; }
+  h1 { font-size: 20px; }
+  input { display: block; margin: 8px 0; padding: 8px; width: 100%; box-sizing: border-box; }
+  button { margin: 6px 6px 6px 0; padding: 8px 14px; cursor: pointer; }
+  pre { background: #f4f4f4; padding: 12px; border-radius: 6px; white-space: pre-wrap; word-break: break-word; }
+  .hint { color: #666; font-size: 13px; }
+</style>
+</head>
+<body>
+  <h1>JWT stored in an httpOnly Cookie</h1>
+
+  <p class="hint">Login: <b>kumar shivam</b> / <b>shivam@123</b> (token expires in 60s on purpose)</p>
+
+  <input id="username" placeholder="username" value="kumar shivam" />
+  <input id="password" placeholder="password" type="password" value="shivam@123" />
+
+  <button onclick="login()">Login</button>
+  <button onclick="getProfile()">Profile (protected)</button>
+  <button onclick="logout()">Logout</button>
+  <button onclick="showJsCookie()">Try reading cookie via JS</button>
+
+  <pre id="output">Output will show here...</pre>
+
+  <script>
+    const out = document.getElementById('output');
+
+    async function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // send/receive cookies
+        body: JSON.stringify({ username, password })
+      });
+      out.textContent = JSON.stringify(await res.json(), null, 2);
+    }
+
+    async function getProfile() {
+      // Notice: we don't attach any token manually.
+      // The browser sends the httpOnly cookie automatically.
+      const res = await fetch('/profile', { credentials: 'include' });
+      out.textContent = JSON.stringify(await res.json(), null, 2);
+    }
+
+    async function logout() {
+      const res = await fetch('/logout', { method: 'POST', credentials: 'include' });
+      out.textContent = JSON.stringify(await res.json(), null, 2);
+    }
+
+    function showJsCookie() {
+      out.textContent = 'document.cookie from JS => "' + document.cookie + '"\n\n' +
+        'The token cookie will NOT appear here because it is httpOnly.\n' +
+        'That is the whole point: JS (and any XSS payload) cannot steal it.';
+    }
+  </script>
+</body>
+</html>
