@@ -33,7 +33,7 @@ Then open `http://localhost:3000` in your browser.
 ## Try it yourself
  
 1. Log in and check DevTools → Application → Cookies — you'll see the `token` cookie marked `HttpOnly`.
-2. Click "Call /profile" — no token is attached manually, the browser sends the cookie for you.
+2. Click "Profile" — no token is attached manually, the browser sends the cookie for you.
 3. Click "Try reading cookie via JS" — the token won't show up in `document.cookie`.
 4. Wait 60 seconds and call `/profile` again — the token has expired, and the server rejects it.
 5. Log out — the cookie is cleared.
