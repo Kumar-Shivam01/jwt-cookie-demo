@@ -20,7 +20,7 @@ Built as a learning project while studying authentication & authorization patter
 - 
 ## Getting started
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Kumar-Shivam01/jwt-cookie-demo
 cd jwt-cookie-demo
 npm install
 node server.js
